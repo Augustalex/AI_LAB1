@@ -4,6 +4,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+from game import Directions
 
 
 class SearchProblem:
@@ -114,11 +115,11 @@ class Node:
     Nodes can be placed in a data structure.
     """
 
-    def __init__(self, state, parent=None, action=None, pathCost=0):
+    def __init__(self, state, parent=None, action=Directions.STOP, pathCost=0):
         if parent:
             self.depth = parent.depth + 1
         else:
-            self.depth = 1
+            self.depth = 0
 
         self.action = action
         self.state = state
