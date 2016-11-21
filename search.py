@@ -87,13 +87,11 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
     return graphSearch(problem, util.Queue())
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
     return graphSearch(problem, util.PriorityQueueWithFunction(lambda n : n.pathCost))
 
 
@@ -108,7 +106,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    return graphSearch(problem, util.PriorityQueueWithFunction(lambda n: n.pathCost))
+    return graphSearch(problem, util.PriorityQueueWithFunction()) #manhattanDistance(problem.getStartState(), goalstate
 
 
 class Node:
@@ -167,7 +165,6 @@ def graphSearch(problem, fringe):
             for fringeElement in node.expandNode(problem):
                 fringe.push(fringeElement)
 
-    print "Hello from the outside //Adelle"
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
