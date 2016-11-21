@@ -11,13 +11,13 @@ code to run a game.  This file is divided into three sections:
           understand.
 
   (ii)  The hidden secrets of pacman:
-          This section contains all o
-
-  (iii) Framework to start a game:
-          The final section contains thef the logic code that the pacman
+          This section contains all of the logic code that the pacman
           environment uses to decide who can move where, who dies when
           things collide, etc.  You shouldn't need to read this section
-          of code, but you can if you want. code for reading the command
+          of code, but you can if you want.
+
+  (iii) Framework to start a game:
+          The final section contains the code for reading the command
           you use to set up the game, then starting up a new game, along with
           linking in all the external parts (agent functions, graphics).
           Check this section out to see all the options available to you.
