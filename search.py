@@ -27,21 +27,6 @@ class Node:
         return str(self.state)
 
 
-def nodeTester():
-    node1 = Node("node1")
-    node2 = Node("node2", node1)
-    node3 = Node("node3", node2)
-    node4 = Node("node4", node3)
-    printNodes(node4)
-
-def printNodes(node):
-    print "Printing out list of nodes:"
-    while node:
-        print node,
-        node = node.getParent()
-    #print
-
-nodeTester()
 
 
 class make_node:
@@ -71,7 +56,6 @@ class make_node:
             result.append(x.parent)
             x = x.parent
         return result
-
 
     def expand_node(self, problem):
         "Return a list of nodes reachable from this node."
