@@ -78,7 +78,6 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
 
     return graphSearch(problem, util.Stack())
 
@@ -115,7 +114,7 @@ class Node:
     Nodes can be placed in a data structure.
     """
 
-    def __init__(self, state, parent=None, action=Directions.STOP, pathCost=0):
+    def __init__(self, state, parent=None, action=None, pathCost=0):
         if parent:
             self.depth = parent.depth + 1
         else:
@@ -148,17 +147,26 @@ def graphSearch(problem, fringe):
 
     closed = {}
     fringe.push(Node(problem.getStartState()))
-    while not fringe.isEmpty():
+    while fringe:
         if fringe.isEmpty():
+            print "EMPTYYYYYYYYYYYYYYYYYYY"
             return None
         node = fringe.pop()
         if problem.isGoalState(node):
-            return node
+            path = []
+            while node.parent is not None:
+                path.append(node.action)
+                node = node.parent
+            path.reverse()
+            print "GOOOOOOOOAL"
+            return path
         if node.state not in closed:
             closed[node.state] = True
+
             for fringeElement in node.expandNode(problem):
                 fringe.push(fringeElement)
 
+    print "Hello from the outside //Adelle"
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
