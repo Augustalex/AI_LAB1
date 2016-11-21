@@ -2,6 +2,9 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
+from random import Random
+
+from datetime import time
 
 import util
 from game import Directions
@@ -91,7 +94,7 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return graphSearch(problem, util.PriorityQueueWithFunction(lambda n : n.pathCost))
 
 
 def nullHeuristic(state, problem=None):
@@ -105,7 +108,7 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return graphSearch(problem, util.PriorityQueueWithFunction(lambda n: n.pathCost))
 
 
 class Node:
@@ -149,16 +152,14 @@ def graphSearch(problem, fringe):
     fringe.push(Node(problem.getStartState()))
     while fringe:
         if fringe.isEmpty():
-            print "EMPTYYYYYYYYYYYYYYYYYYY"
             return None
         node = fringe.pop()
-        if problem.isGoalState(node):
+        if problem.isGoalState(node.state):
             path = []
             while node.parent is not None:
                 path.append(node.action)
                 node = node.parent
             path.reverse()
-            print "GOOOOOOOOAL"
             return path
         if node.state not in closed:
             closed[node.state] = True
