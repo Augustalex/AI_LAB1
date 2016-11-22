@@ -325,7 +325,7 @@ class CornersProblem(search.SearchProblem):
 
             if not hitsWall:
                 successors.append(state)
-                
+
         self._expanded += 1  # DO NOT CHANGE
         return successors
 
@@ -334,7 +334,9 @@ class CornersProblem(search.SearchProblem):
         Returns the cost of a particular sequence of actions.  If those actions
         include an illegal move, return 999999.  This is implemented for you.
         """
-        if actions == None: return 999999
+        if actions is None:
+            return 999999
+
         x, y = self.startingPosition
         for action in actions:
             dx, dy = Actions.directionToVector(action)
