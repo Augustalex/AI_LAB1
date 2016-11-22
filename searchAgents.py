@@ -284,11 +284,9 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        self.cornersVisited = {}
-        for corner in self.corners:
-            self.cornersVisited[corner] = False
+        self.cornersVisited = []
 
-        self.startState = (self.startingPosition, self.cornersVisited)
+        self.startState = self.startingPosition
 
     def getStartState(self):
         """
@@ -302,7 +300,7 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
 
-        return all(visited is True for visited in self.cornersVisited.values())
+        return len(self.cornersVisited) is 4
 
     def getSuccessors(self, state):
         """
@@ -321,18 +319,18 @@ class CornersProblem(search.SearchProblem):
             # Here's a code snippet for figuring out whether a new position hits a wall:
             print "Hello"
             print state
-            x, y = state[0]
+            x, y = state
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
 
-            nState = (nextx, nexty)
+            nextState = (nextx, nexty)
             if not hitsWall:
-                if nState in self.corners and nState not in self.cornersVisited:
-                    self.cornersVisited[nState] = True
-                    print self.cornersVisited.values()
+                if nextState in self.corners and nextState not in self.cornersVisited:
+                    self.cornersVisited.append(nextState)
+                    print self.cornersVisited
 
-                successor = ((nState, list(self.cornersVisited)), action, 1)
+                successor = (nextState, action, 1)
                 successors.append(successor)
 
         self._expanded += 1  # DO NOT CHANGE
