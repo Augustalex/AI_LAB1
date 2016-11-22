@@ -324,7 +324,7 @@ class CornersProblem(search.SearchProblem):
             hitsWall = self.walls[nextx][nexty]
 
             if not hitsWall:
-                successors.append(state)
+                successors.append((nextx, nexty))
 
         self._expanded += 1  # DO NOT CHANGE
         return successors
