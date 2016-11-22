@@ -114,7 +114,7 @@ class Node:
     Nodes can be placed in a data structure.
     """
 
-    def __init__(self, state, parent=None, action=None, pathCost=0):
+    def __init__(self, state, parent=None, action=None, pathCost=0, depth=0):
         if parent:
             self.depth = parent.depth + 1
         else:

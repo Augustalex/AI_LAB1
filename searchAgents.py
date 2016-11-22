@@ -284,7 +284,7 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        self.cornersVisited = []
+        #self.cornersVisited = []
 
         self.startState = self.startingPosition
 
@@ -293,14 +293,14 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        return self.startState
+        return (self.startState, [self.corners[0], self.corners[1], self.corners[2], self.corners[3]])
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
 
-        return len(self.cornersVisited) is 4
+        return len(state[1]) is 0
 
     def getSuccessors(self, state):
         """
@@ -313,23 +313,24 @@ class CornersProblem(search.SearchProblem):
             is the incremental cost of expanding to that successor
         """
 
+        x, y = state[0]
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
             print "Hello"
             print state
-            x, y = state
+
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
 
-            nextState = (nextx, nexty)
             if not hitsWall:
-                if nextState in self.corners and nextState not in self.cornersVisited:
-                    self.cornersVisited.append(nextState)
-                    print self.cornersVisited
-
+                nextPos = (nextx, nexty)
+                cornersLeft = state[1][:]
+                if nextPos in cornersLeft:
+                    cornersLeft.remove(nextPos)
+                nextState = (nextPos, cornersLeft)
                 successor = (nextState, action, 1)
                 successors.append(successor)
 
