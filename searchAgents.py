@@ -285,24 +285,24 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         self.cornersVisited = {}
+        for corner in self.corners:
+            self.cornersVisited[corner] = False
+
+        self.startState = (self.startingPosition, self.cornersVisited)
 
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        return self.startingPosition
+        return self.startState
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
 
-        """for corner in self.corners:
-            elif corner == state:
-                self.cornersVisited[corner] = True"""
-
-        return all(visited == True for visited in self.cornersVisited.values())
+        return all(visited is True for visited in self.cornersVisited.values())
 
     def getSuccessors(self, state):
         """
@@ -319,7 +319,9 @@ class CornersProblem(search.SearchProblem):
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            x, y = state
+            print "Hello"
+            print state
+            x, y = state[0]
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
@@ -328,6 +330,7 @@ class CornersProblem(search.SearchProblem):
             if not hitsWall:
                 if nState in self.corners and nState not in self.cornersVisited:
                     self.cornersVisited[nState] = True
+                    print self.cornersVisited.values()
 
                 successor = ((nState, list(self.cornersVisited)), action, 1)
                 successors.append(successor)
