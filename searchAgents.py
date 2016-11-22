@@ -283,8 +283,6 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        self.startState = startingGameState
-
         self.cornersVisited = {}
 
     def getStartState(self):
@@ -320,13 +318,14 @@ class CornersProblem(search.SearchProblem):
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
+            x, y = state
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
-
+            if not hitsWall:
+                successors.append(state)
+                
         self._expanded += 1  # DO NOT CHANGE
         return successors
 
