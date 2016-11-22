@@ -326,11 +326,11 @@ class CornersProblem(search.SearchProblem):
 
             nState = (nextx, nexty)
             if not hitsWall:
-                successor = (nState, action, 1)
-                successors.append(successor)
-
                 if nState in self.corners and nState not in self.cornersVisited:
                     self.cornersVisited[nState] = True
+
+                successor = ((nState, list(self.cornersVisited)), action, 1)
+                successors.append(successor)
 
         self._expanded += 1  # DO NOT CHANGE
         return successors
