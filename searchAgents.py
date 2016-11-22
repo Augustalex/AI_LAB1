@@ -19,6 +19,7 @@ description for details.
 
 Good luck and happy searching!
 """
+from unittest.case import _AssertRaisesContext
 
 from game import Directions
 from game import Agent
@@ -323,8 +324,11 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
 
+            nState = (nextx, nexty)
             if not hitsWall:
-                successors.append((nextx, nexty))
+                successors.append(nState)
+                if nState in self.corners and nState not in self.cornersVisited:
+                    self.cornersVisited[nState] = True
 
         self._expanded += 1  # DO NOT CHANGE
         return successors
