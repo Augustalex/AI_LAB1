@@ -142,7 +142,8 @@ def graphSearch(problem, fringe):
     :return:
     """
 
-    closed = {}
+    #closed = {}
+    closed = []
     fringe.push(Node(problem.getStartState()))
     while fringe:
         if fringe.isEmpty():
@@ -156,7 +157,7 @@ def graphSearch(problem, fringe):
             path.reverse()
             return path
         if node.state not in closed:
-            closed[node.state] = True
+            closed.append(node.state)
 
             for fringeElement in node.expandNode(problem):
                 fringe.push(fringeElement)
