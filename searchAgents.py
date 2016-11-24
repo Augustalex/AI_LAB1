@@ -284,22 +284,28 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        self.cornersVisited = []
-        self.startState = (self.startingPosition, self.cornersVisited)
+
 
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        return self.startState
+
+        cornersVisited = []
+        startState = (self.startingPosition, cornersVisited)
+
+        return startState
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
 
-        return len(self.cornersVisited) is 4
+        position = state[0]
+        visitedCorners = state[1]
+
+        return len(visitedCorners) is 4
 
     def getSuccessors(self, state):
         """
@@ -326,14 +332,13 @@ class CornersProblem(search.SearchProblem):
 
             if not hitsWall:
 
-                self.cornersVisited = list(visitedCorners)
                 nextState = (nextx, nexty)
+                cornersCopy = visitedCorners[:]
+                if nextState in self.corners and nextState not in visitedCorners:
+                    cornersCopy.append(nextState)
+                    print "CORNER VISITED: " + str(visitedCorners)
 
-                if nextState in self.corners and nextState not in self.cornersVisited:
-                    self.cornersVisited.append(nextState)
-                    print "CORNER VISITED: " + str(self.cornersVisited)
-
-                successor = ((nextState, self.cornersVisited), action, 1)
+                successor = ((nextState, cornersCopy), action, 1)
                 successors.append(successor)
 
         self._expanded += 1  # DO NOT CHANGE
