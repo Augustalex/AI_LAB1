@@ -388,10 +388,12 @@ def cornersHeuristic(state, problem):
             notVisited.append(corner)
 
     while len(notVisited) > 0:
-        distance, corner = min([(util.manhattanDistance(currentPos,corner), corner) for corner in notVisited])
-        total += distance
-        currentPos = corner
-        notVisited.remove(corner)
+        for corner in notVisited:
+            manhattan = util.manhattanDistance(currentPos, corner)
+            distance = min(manhattan, corner)
+            total += distance
+            currentPos = corner
+            notVisited.remove(corner)
 
 
     return total
