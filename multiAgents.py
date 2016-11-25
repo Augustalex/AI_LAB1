@@ -60,7 +60,33 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
-        return successorGameState.getScore()
+
+        if successorGameState.isWin():
+            return float("inf")
+        elif successorGameState.isLose():
+            return -float("inf")
+
+        ghostPosition = currentGameState.getGhostPosition(1)
+        distFromGhost = util.manhattanDistance(ghostPosition, newPos)
+
+        score = max(distFromGhost, 1) + successorGameState.getScore()
+
+        allDots = newFood.asList()
+        for dotPos in allDots:
+            closestDot = min(util.manhattanDistance(dotPos, newPos), allDots)
+
+        if (currentGameState.getNumFood() > successorGameState.getNumFood()):
+            score += 100
+
+        if action == Directions.STOP:
+            score -= 1.5
+        score -= 1.5 * closestDot
+
+        powerPellets = currentGameState.getCapsules()
+        if successorGameState.getPacmanPosition() in powerPellets:
+            score += 100
+
+        return score
 
 def scoreEvaluationFunction(currentGameState):
     """
