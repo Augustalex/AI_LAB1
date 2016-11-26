@@ -395,7 +395,6 @@ def cornersHeuristic(state, problem):
             currentPos = corner
             notVisited.remove(corner)
 
-
     return total
 
 
