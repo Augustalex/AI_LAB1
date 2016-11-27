@@ -164,16 +164,90 @@ class MinimaxAgent(MultiAgentSearchAgent):
             return bestAction
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
-    """
-      Your minimax agent with alpha-beta pruning
-    """
+
+    def gameOver(self, gameState, depth):
+        return gameState.isWin() or gameState.isLose(), depth == 0
+
+    def maxValue(self, gameState, alpha, beta, depth):
+
+        pacman = 0
+
+        if self.gameOver(gameState, depth):
+            return self.evaluationFunction(gameState)
+
+        v = -float("inf")
+        legalActions = gameState.getLegalActions(pacman)
+
+        nextState = map(lambda action: gameState.generateSuccessor(pacman, action), legalActions)
+        v = max(v, self.minValue(nextState, alpha, beta, gameState.getNumAgents() - 1, depth))
+
+        if v >= beta:
+            return v
+            alpha = max(alpha, v)
+        return v
+
+    def minValue(self, gameState, alpha, beta, agentindex, depth):
+
+        numOfGhosts = gameState.getNumAgents() - 1
+
+        #if self.gameOver(gameState, depth): return self.evaluationFunction(gameState)
+        """
+            IF WE REPLACE THE ABOVE IF-STATEMENT FOR THE ONE BELOW, PACMAN WINS ALMOST
+            EVERYTIME... WIERD 'CAUSE IS THE SAME CODE... ANYHOW, PACMAN IS NOT SUPPOSE TO WIN,
+            WE SHOULD, ON THE OTHER HAND, GET THE SAME RESULT AS IN MINIMAXAGENT, THAT'S TO
+            SAY, -492 OR SO.
+
+            PACMAN.PY
+            -p AlphaBetaAgent  -l minimaxClassic  -a depth=1
+        """
+        if gameState.isWin() or gameState.isLose() or depth == 0: return self.evaluationFunction(gameState)
+
+        v = +float("inf")
+        legalActions = gameState.getLegalActions(agentindex)
+
+        #nextState = map(lambda action: gameState.generateSuccessor(agentindex, action), legalActions)
+        #Too much red-tape to make this work...
+
+        for action in legalActions:
+
+            nextState = gameState.generateSuccessor(agentindex, action)
+
+            if agentindex == numOfGhosts:
+                v = min(v, self.maxValue(nextState, alpha, beta, depth - 1))
+
+                if v <= alpha:
+                    return v
+                beta = min(beta, v)
+            else:
+                v = min(v, self.minValue(nextState, alpha, beta, agentindex + 1, depth))
+                if v <= alpha:
+                    return v
+                beta = min(beta, v)
+
+        return v
 
     def getAction(self, gameState):
-        """
-          Returns the minimax action using self.depth and self.evaluationFunction
-        """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        pacman = 0
+        legalActions = gameState.getLegalActions(pacman)
+        bestAction = Directions.STOP
+        score = -(float("inf"))
+        alpha = -(float("inf"))
+        beta = float("inf")
+
+        for action in legalActions:
+
+            nextState = gameState.generateSuccessor(pacman, action)
+            prevScore = score
+            score = max(score, self.minValue(nextState, alpha, beta, 1, self.depth))
+
+            if score > prevScore:
+                bestAction = action
+            if score >= beta:
+                return bestAction
+            alpha = max(alpha, score)
+
+        return bestAction
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
@@ -202,4 +276,3 @@ def betterEvaluationFunction(currentGameState):
 
 # Abbreviation
 better = betterEvaluationFunction
-
