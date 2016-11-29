@@ -190,7 +190,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         numOfGhosts = gameState.getNumAgents() - 1
 
-        #if self.gameOver(gameState, depth): return self.evaluationFunction(gameState)
+        if self.gameOver(gameState, depth): return self.evaluationFunction(gameState)
         """
             IF WE REPLACE THE ABOVE IF-STATEMENT FOR THE ONE BELOW, PACMAN WINS ALMOST
             EVERYTIME... WIERD 'CAUSE IS THE SAME CODE... ANYHOW, PACMAN IS NOT SUPPOSE TO WIN,
@@ -200,7 +200,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             PACMAN.PY
             -p AlphaBetaAgent  -l minimaxClassic  -a depth=1
         """
-        if gameState.isWin() or gameState.isLose() or depth == 0: return self.evaluationFunction(gameState)
+        #if gameState.isWin() or gameState.isLose() or depth == 0: return self.evaluationFunction(gameState)
 
         v = +float("inf")
         legalActions = gameState.getLegalActions(agentindex)
@@ -308,7 +308,37 @@ def betterEvaluationFunction(currentGameState):
       DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    if currentGameState.isWin():
+        return float("inf")
+    elif currentGameState.isLose():
+        return -float("inf")
+
+    score = scoreEvaluationFunction(currentGameState)
+    newFood = currentGameState.getFood()
+    allDots = newFood.asList()
+    closestDot = float("inf")
+
+    for pos in allDots:
+        currDist = min(util.manhattanDistance(pos, currentGameState.getPacmanPosition()), closestDot)
+        closestDot = currDist
+
+    numOfGhosts = currentGameState.getNumAgents() - 1
+    position = 1
+    distFromGhost = float("inf")
+
+    while position <= numOfGhosts:
+        nextDist = util.manhattanDistance(currentGameState.getPacmanPosition(), currentGameState.getGhostPosition(position))
+        distFromGhost = min(distFromGhost, nextDist)
+        position += 1
+
+    score += max(distFromGhost, 1) * 2
+    score -= closestDot * 1.5
+    powerPellets = currentGameState.getCapsules()
+    score -= 4 * len(allDots)
+    score -= 3.5 * len(powerPellets)
+
+    return score
 
 # Abbreviation
 better = betterEvaluationFunction
