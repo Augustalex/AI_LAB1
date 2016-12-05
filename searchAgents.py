@@ -305,7 +305,7 @@ class CornersProblem(search.SearchProblem):
         position = state[0]
         visitedCorners = state[1]
 
-        return len(visitedCorners) is 4
+        return len(visitedCorners) == 4
 
     def getSuccessors(self, state):
         """
@@ -378,8 +378,9 @@ def cornersHeuristic(state, problem):
     walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    currentPos = state[0][:]
+    currentPos = state[0]
     visitedCorners = state[1]
+    corners = list(problem.corners) #We are using now the corner coordinates
     notVisited = []
     total = 0
 
@@ -387,12 +388,11 @@ def cornersHeuristic(state, problem):
         if corner not in visitedCorners:
             notVisited.append(corner)
 
+    currPoint = currentPos
     while len(notVisited) > 0:
-        for corner in notVisited:
-            manhattan = util.manhattanDistance(currentPos, corner)
-            distance = min(manhattan, corner)
+            distance, corner = min([(util.manhattanDistance(currPoint, corner), corner) for corner in notVisited])
             total += distance
-            currentPos = corner
+            currPoint = corner
             notVisited.remove(corner)
 
     return total

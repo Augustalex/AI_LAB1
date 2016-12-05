@@ -121,7 +121,7 @@ class MultiAgentSearchAgent(Agent):
 class MinimaxAgent(MultiAgentSearchAgent):
 
     def gameOver(self, gameState, depth):
-        return gameState.isWin() or gameState.isLose(), depth == 0
+        return gameState.isWin() or gameState.isLose() or depth == 0
 
     def maxValue(self, gameState, depth, numOfGhosts):
 
@@ -130,7 +130,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         v = -float("inf")
         pacman = 0
-        v = map(lambda x: max(v, self.minValue(gameState.generateSuccessor(pacman, x), depth - 1, 1, numOfGhosts)))
+        for action in gameState.generateSuccessor(pacman):
+        #Here we're just taking into account pacman's legal actions
+            v = max(v, self.minValue(gameState.generateSuccessor(pacman, action), depth - 1, 1, numOfGhosts))
         return v
 
     def minValue(self, gameState, depth, agentindex, numOfGhosts):
@@ -141,9 +143,14 @@ class MinimaxAgent(MultiAgentSearchAgent):
         v = +float("inf")
 
         if agentindex == numOfGhosts:
-            v = map(lambda x: min(v, self.maxValue(gameState.generateSuccessor(agentindex, x), depth - 1, numOfGhosts)))
+            for action in gameState.getLegalActions(agentindex):
+            #the above code returns a list of legal actions for an agent in which pacman
+            #has index 0 and the ghost have an index greater than 0 (>=1)
+                v = min(v, self.maxValue(gameState.generateSuccessor(agentindex, action), depth - 1, numOfGhosts))
         else:
-            v = map(lambda x:min(v, self.minValue(gameState.generateSuccessor(agentindex, x), depth, agentindex + 1, numOfGhosts)))
+            for action in gameState.getLegalActions(agentindex):
+                v = min(v, self.minValue(gameState.generateSuccessor(agentindex, action), depth, agentindex + 1, numOfGhosts))
+
             return v
 
     def getAction(self, gameState):
@@ -166,7 +173,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 class AlphaBetaAgent(MultiAgentSearchAgent):
 
     def gameOver(self, gameState, depth):
-        return gameState.isWin() or gameState.isLose(), depth == 0
+        return gameState.isWin() or gameState.isLose() or depth == 0
 
     def maxValue(self, gameState, alpha, beta, depth):
 
@@ -178,8 +185,10 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         v = -float("inf")
         legalActions = gameState.getLegalActions(pacman)
 
-        nextState = map(lambda action: gameState.generateSuccessor(pacman, action), legalActions)
-        v = max(v, self.minValue(nextState, alpha, beta, gameState.getNumAgents() - 1, depth))
+        for action in legalActions:
+        #the lambda function is gone, with this loop statement now we get an state not a list of them
+            nextState = gameState.generateSuccessor(pacman, action)
+            v = max(v, self.minValue(nextState, alpha, beta, gameState.getNumAgents() - 1, depth))
 
         if v >= beta:
             return v
@@ -190,26 +199,13 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         numOfGhosts = gameState.getNumAgents() - 1
 
-        if self.gameOver(gameState, depth): return self.evaluationFunction(gameState)
-        """
-            IF WE REPLACE THE ABOVE IF-STATEMENT FOR THE ONE BELOW, PACMAN WINS ALMOST
-            EVERYTIME... WIERD 'CAUSE IS THE SAME CODE... ANYHOW, PACMAN IS NOT SUPPOSE TO WIN,
-            WE SHOULD, ON THE OTHER HAND, GET THE SAME RESULT AS IN MINIMAXAGENT, THAT'S TO
-            SAY, -492 OR SO.
-
-            PACMAN.PY
-            -p AlphaBetaAgent  -l minimaxClassic  -a depth=1
-        """
-        #if gameState.isWin() or gameState.isLose() or depth == 0: return self.evaluationFunction(gameState)
+        if self.gameOver(gameState, depth):
+            return self.evaluationFunction(gameState)
 
         v = +float("inf")
         legalActions = gameState.getLegalActions(agentindex)
 
-        #nextState = map(lambda action: gameState.generateSuccessor(agentindex, action), legalActions)
-        #Too much red-tape to make this work...
-
         for action in legalActions:
-
             nextState = gameState.generateSuccessor(agentindex, action)
 
             if agentindex == numOfGhosts:
